@@ -42,16 +42,16 @@ public class SamplePlugIn extends TokenPlugIn{
 			{
 				mLog.debug("Authorname was requested");
 				Token lResponse = createResponse(aToken);
-				lResponse.setString("name", "Sample");
-				sendToken(aConnector, aConnector, aToken);
+				lResponse.setString("name", "GSHwang");
+				sendToken(aConnector, aConnector, lResponse);
 			}
-			else if(lType.equals("myNumber"))
+			else if(lType.equals("calculate"))
 			{
 				int square = aToken.getInteger("myNumber");
 				square *= square;
 				Token lResponse = createResponse(aToken);
 				lResponse.setInteger("calNumber", square);
-				sendToken(aConnector, aConnector, aToken);
+				sendToken(aConnector, aConnector, lResponse);
 			}
 		}
 	}

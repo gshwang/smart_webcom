@@ -425,11 +425,11 @@
 				<blockingQueueSize>1000</blockingQueueSize>
 			</threadPool>
 		</server>
-		<server>
+		  <server>
 			<name>org.jwebsocket.server.CustomServer</name>
 			<id>cs0</id>
 			<jar>jWebSocketCustomServer-1.0.jar</jar>
-		</server>
+		</server> 
 	</servers>
 
 	<!-- jWebSocket global rights -->

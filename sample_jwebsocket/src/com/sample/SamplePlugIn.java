@@ -23,7 +23,7 @@ public class SamplePlugIn extends TokenPlugIn{
 		
 		this.setNamespace(NS_SAMPLE);
 	}
-	
+	 
 	@Override
 	public void processToken(PlugInResponse aResponse,
 			WebSocketConnector aConnector, Token aToken) {

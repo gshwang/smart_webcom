@@ -9,17 +9,39 @@
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <title>Sample Websocket PlugIn - Web Client</title>
         <script type="text/javascript" src="res/js/jWebSocket.js"></script>
+        <script type="text/javascript" src="res/js/prototype.js"></script>
         <script type="text/javascript" src="js/js_code.js"></script>
         <script type="text/javascript" src="js/SampleClientPlugIn.js"></script>
+        <script type="text/javascript">
+	        function loadWebCam(){
+	        	console.log("start webcam");
+	        	var video = $('myVideo');
+	            if (navigator.webkitGetUserMedia) {
+	    				navigator.webkitGetUserMedia({audio:true, video:true},
+	                    function(stream) { video.src = webkitURL.createObjectURL(stream); },
+	                    function(error) { alert('ERROR: ' + error.toString()); } );
+	            } else {
+	                alert('webkitGetUserMedia not supported');
+	            }
+	
+	            console.log("stop webcam");
+	        }                
+        </script>
 <title>Insert title here</title>
 </head>
-<body onload="initPage();">
+<body onload="initPage();loadWebCam();">
+<!--   <body onload="loadWebCam();"> -->
 		<input id="slider" type="range" min="0" max="100" step="1" onChange="sliderHasChanged();" /></br>
 		<input id="inputNumber" type="number"></input>
         <button type="button" onclick="requestResult();">calculate</button>
         <br/>
         <button type="button" onclick="websocketClient.requestAuthorName();">Author</button>
         <br/>
+        
+		<div>
+		    <video id="myVideo" width="320" height="240" autoplay></video>
+		</div>
+        
         <p><a href="http://www.lauridmeyer.com">http://www.lauridmeyer.com</a></p>
 </body>
 </html>

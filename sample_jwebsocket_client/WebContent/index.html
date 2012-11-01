@@ -15,7 +15,7 @@
         <script type="text/javascript">
 	        function loadWebCam(){
 	        	console.log("start webcam");
-	        	var video = $('myVideo');
+	        	var video = $('myVideo'); 
 	            if (navigator.webkitGetUserMedia) {
 	    				navigator.webkitGetUserMedia({audio:true, video:true},
 	                    function(stream) { video.src = webkitURL.createObjectURL(stream); },
@@ -23,7 +23,6 @@
 	            } else {
 	                alert('webkitGetUserMedia not supported');
 	            }
-	
 	            console.log("stop webcam");
 	        }                
         </script>

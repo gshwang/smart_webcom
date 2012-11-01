@@ -15,6 +15,10 @@ jws.SampleClientPlugIn = {
 	      else if( aToken.reqType == "calculate" ) {
 	    	  alert( "calculated Number is: " + aToken.calNumber );
 		  }
+	      else if( aToken.reqType == "sliderHasChanged" ) {
+	    	  console.log("change Slider to "+aToken.value);
+	    	  document.getElementById("slider").value=aToken.value;
+	      }
 	    }
 	  },
 
@@ -43,7 +47,20 @@ jws.SampleClientPlugIn = {
 		      console.log("sending calculation request for:"+inputNumber);
 		      this.sendToken( lToken,  aOptions );//send it
 		    }
-		}
+		},
+		
+		sliderChanged: function(value, aOptions ) {
+		    if( this.isConnected() ) {
+		    	//create the request token
+		      var lToken = {
+			     ns: jws.SampleClientPlugIn.NS,
+			     type: "sliderChanged",
+			     value: value//add the slider value to the token
+		      };
+		      console.log("sending slider changed to:"+value);
+		      this.sendToken( lToken,  aOptions );//send it
+		    }
+	}
 };
 //add the client PlugIn
 jws.oop.addPlugIn( jws.jWebSocketTokenClient, jws.SampleClientPlugIn );

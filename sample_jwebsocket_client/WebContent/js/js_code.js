@@ -70,3 +70,9 @@ function logon() {
 
 	});
 }
+
+function sliderHasChanged(){
+	value=parseInt(document.getElementById("slider").value);//get the value
+	console.log("Slider Value:"+value);
+	websocketClient.sliderChanged(value);//call the sliderChanged method from LauridsClientPlugIn.js
+}

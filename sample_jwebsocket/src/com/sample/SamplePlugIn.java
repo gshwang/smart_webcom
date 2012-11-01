@@ -1,12 +1,19 @@
 package com.sample;
 
+import java.util.Collection;
+
+import javolution.util.FastList;
+
 import org.apache.log4j.Logger;
 import org.jwebsocket.api.PluginConfiguration;
 import org.jwebsocket.api.WebSocketConnector;
+import org.jwebsocket.kit.CloseReason;
 import org.jwebsocket.kit.PlugInResponse;
 import org.jwebsocket.logging.Logging;
 import org.jwebsocket.plugins.TokenPlugIn;
+import org.jwebsocket.token.BaseToken;
 import org.jwebsocket.token.Token;
+import org.jwebsocket.token.TokenFactory;
 
 public class SamplePlugIn extends TokenPlugIn{
 	
@@ -14,6 +21,8 @@ public class SamplePlugIn extends TokenPlugIn{
 	private static Logger mLog = Logging.getLogger(SamplePlugIn.class);
 	
 	private final static String NS_SAMPLE = "com.sample.SamplePlugIn";
+	
+	private Collection<WebSocketConnector> mClients;
 
 	public SamplePlugIn(PluginConfiguration aConfiguration) {
 		super(aConfiguration);
@@ -22,6 +31,27 @@ public class SamplePlugIn extends TokenPlugIn{
 		}
 		
 		this.setNamespace(NS_SAMPLE);
+		
+		mClients = new FastList<WebSocketConnector>().shared();
+	}
+	
+	@Override
+	public void connectorStarted(WebSocketConnector aConnector) {
+		mClients.add(aConnector);
+		if(mLog.isDebugEnabled())
+		{
+			mLog.debug("new Client has registered: " + aConnector.getId());
+		}
+	}
+	
+	@Override
+	public void connectorStopped(WebSocketConnector aConnector,
+			CloseReason aCloseReason) {
+		mClients.remove(aConnector);
+		if(mLog.isDebugEnabled())
+		{
+			mLog.debug("client " + aConnector.getId() + " is gone ");
+		}
 	}
 	 
 	@Override
@@ -53,7 +83,45 @@ public class SamplePlugIn extends TokenPlugIn{
 				lResponse.setInteger("calNumber", square);
 				sendToken(aConnector, aConnector, lResponse);
 			}
+			else if (lType.equals("sliderChanged")) {//if the request is "sliderchanged"
+				int value= aToken.getInteger("value");//get the Value
+				mLog.debug("new Slider Value:"+value);
+
+				//Broadcast the new Value to all other Clients
+				Token lToken = TokenFactory.createToken(BaseToken.TT_EVENT);
+				lToken.setString("ns", NS_SAMPLE);
+				lToken.setString("reqType", "sliderHasChanged");
+				lToken.setInteger("value", value);
+				broadcast(lToken,aConnector);
+			}
+
 		}
 	}
 
+	/**
+	 * 
+	 * @param aToken
+	 */
+	public void broadcastToAll(Token aToken)
+	{
+		for(WebSocketConnector lConnector : mClients)
+		{
+			getServer().sendToken(lConnector, aToken);
+		}
+	}
+	
+	/**
+	 * 
+	 * @param aToken
+	 * @param except
+	 */
+	public void broadcast(Token aToken, WebSocketConnector except) {
+		for (WebSocketConnector lConnector : mClients) {
+			if(lConnector!=except){ // remove self
+				mLog.debug("sending new Slider Value...");
+				getServer().sendToken(lConnector, aToken);
+			}
+		}
+	}
+	
 }

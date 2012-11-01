@@ -93,7 +93,7 @@ public class SamplePlugIn extends TokenPlugIn{
 				lToken.setString("reqType", "sliderHasChanged");
 				lToken.setInteger("value", value);
 				broadcast(lToken,aConnector);
-			}
+			} 
 
 		}
 	}
